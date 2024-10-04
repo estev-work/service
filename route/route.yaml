@@ -1,0 +1,26 @@
+api:
+  questions:
+    store:
+      path: questions
+      controller: App\Controllers\QuestionController
+      action: store
+      methods: POST
+    index:
+      path: questions
+      controller: App\Controllers\QuestionController
+      action: index
+      methods:
+        - GET
+        - HEAD
+    show:
+      path: questions/:id
+      controller: App\Controllers\QuestionController
+      action: show
+      methods:
+        - GET
+        - HEAD
+    update:
+      path: questions/:id
+      controller: App\Controllers\QuestionController
+      action: update
+      methods: PUT

@@ -1,0 +1,4 @@
+driver: redis
+redis:
+  host: redis #название контейнера redis
+  port: 6379
