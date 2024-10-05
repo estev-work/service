@@ -21,5 +21,12 @@ try {
     }
     echo $route->execAction($request)->getBody();
 } catch (Throwable $e) {
-    echo json_encode($e->getMessage());
+    header('Content-Type: application/json');
+    echo json_encode([
+        'error' => $e->getMessage(),
+        'code' => $e->getCode(),
+        'trace' => $e->getTrace(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+    ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 }
