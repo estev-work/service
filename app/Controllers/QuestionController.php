@@ -25,6 +25,6 @@ final class QuestionController
     {
         $query = $request->getQueryParams();
         $body = $request->getParsedBody();
-        return JsonResponse::send(200, ['result' => 'success', 'id' => $id, 'query' => $query, 'body' => $body]);
+        return JsonResponse::send(['result' => 'success', 'id' => $id, 'query' => $query, 'body' => $body]);
     }
 }

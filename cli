@@ -2,7 +2,7 @@
 <?php
 require __DIR__ . '/vendor/autoload.php';
 
-use App\Core\ConfigLoader;
+use App\Core\Config\ConfigLoader;
 use Symfony\Component\Console\Input\ArgvInput;
 
 $input = new ArgvInput();

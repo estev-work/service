@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\Routing;
 
 use Nyholm\Psr7\Uri;
 use Symfony\Component\Yaml\Yaml;
@@ -15,7 +15,7 @@ final class Router
     public function __construct(array $sections)
     {
         $this->sections = $sections;
-        $routePath = __DIR__ . '/../../route/route.yaml';
+        $routePath = __DIR__ . '/../../../route/route.yaml';
         $parsedYaml = Yaml::parseFile($routePath);
         foreach ($this->sections as $section => $prefix) {
             $this->routes[$section] = $this->parseRoutes($prefix, $parsedYaml[$section]);

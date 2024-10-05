@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\Routing;
 
 use App\Core\Http\Request;
 use Psr\Http\Message\ResponseInterface;

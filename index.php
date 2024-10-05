@@ -3,8 +3,8 @@
 $container = require __DIR__ . '/app/bootstrap.php';
 
 use App\Core\Http\Request;
-use App\Core\Route;
-use App\Core\Router;
+use App\Core\Routing\Route;
+use App\Core\Routing\Router;
 
 $router = new Router([
     'api' => '/api/v1/',

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Commands;
 
-use App\Core\Command;
+use App\Core\Command\Command;
 
 final class ClearCacheCommand extends Command
 {

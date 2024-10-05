@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Core;
+namespace App\Core\Command;
 
+use App\Core\Config\Config;
 use Symfony\Component\Console\Input\ArgvInput;
 
 abstract class Command
