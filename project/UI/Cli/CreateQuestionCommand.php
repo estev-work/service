@@ -24,7 +24,7 @@ final class CreateQuestionCommand extends Command
             $question = $service->createQuestion(
                 $DTO
             );
-            $this->log('id: ' . $question);
+            $this->info('id: ' . $question);
             return 1;
         } catch (\Exception $exception) {
             $this->log($exception->getMessage());

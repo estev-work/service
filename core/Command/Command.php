@@ -12,6 +12,7 @@ abstract class Command
 {
     public function __construct(protected readonly InputInterface $input, protected readonly AppLoggerInterface $logger)
     {
+        $this->logger->setChannel(Config::get('console.log.chanel'));
         $this->runBase();
     }
 
@@ -26,9 +27,13 @@ abstract class Command
             }
             $this->success('Success');
         } catch (\Throwable $exception) {
+            $config = Config::get('console');
             $this->printError($exception->getMessage());
-            if (Config::get('console.error.trace')) {
+            if ($config['error']['trace']) {
                 $this->printCommandClass($this::class, $exception->getTrace());
+            }
+            if ($config['log']['enable']) {
+                $this->logger->warning($this::class, $exception->getTrace());
             }
             $this->warn('Command failed');
             exit(1);
@@ -53,29 +58,62 @@ abstract class Command
         print 'Error: ' . $color1 . $message . $resetColor . PHP_EOL;
     }
 
+    /**
+     * Зелёный текст
+     *
+     * @param string $message
+     *
+     * @return void
+     */
     protected function success(string $message): void
     {
         $color1 = "\033[32m";
         $resetColor = "\033[0m";
-        $this->logger->info($color1 . $message . $resetColor);
 
         print $color1 . $message . $resetColor . PHP_EOL;
     }
 
+    /**
+     * Синий текст
+     *
+     * @param string $message
+     *
+     * @return void
+     */
+    protected function info(string $message): void
+    {
+        $color1 = "\033[34m";
+        $resetColor = "\033[0m";
+
+        print $color1 . $message . $resetColor . PHP_EOL;
+    }
+
+    /**
+     * Красный текст
+     *
+     * @param string $message
+     *
+     * @return void
+     */
     protected function warn(string $message): void
     {
         $color1 = "\033[91m";
         $resetColor = "\033[0m";
-        $this->logger->error($color1 . $message . $resetColor);
 
         print $color1 . $message . $resetColor . PHP_EOL;
     }
 
+    /**
+     * Бирюзовый текст
+     *
+     * @param string $message
+     *
+     * @return void
+     */
     protected function log(string $message): void
     {
-        $color1 = "\033[91m";
+        $color1 = "\033[96m";
         $resetColor = "\033[0m";
-        $this->logger->info($color1 . $message . $resetColor);
         print $color1 . $message . $resetColor . PHP_EOL;
     }
 }

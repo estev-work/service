@@ -8,6 +8,12 @@ channels:
       name: application
     daily: true
     days: 7
+  console:
+    path: console
+    file:
+      name: console
+    daily: true
+    days: 7
   kafka-work:
     path: kafka
     file:

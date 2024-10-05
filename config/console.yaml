@@ -1,2 +1,5 @@
 error:
-  trace: false
+  trace: true
+log:
+  enable: true
+  chanel: console
