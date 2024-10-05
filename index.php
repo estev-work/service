@@ -1,21 +1,25 @@
 <?php
 
-$container = require __DIR__ . '/app/bootstrap.php';
+$container = require __DIR__ . '/core/bootstrap.php';
 
-use App\Core\Http\Request;
-use App\Core\Routing\Route;
-use App\Core\Routing\Router;
+use Core\Http\Request;
+use Core\Routing\Route;
+use Core\Routing\Router;
 
-$router = new Router([
-    'api' => '/api/v1/',
-]);
+try {
+    $router = new Router([
+        'api' => '/api/v1/',
+    ]);
 
-$request = new Request();
+    $request = new Request();
 
-/** @var Route $route */
-$route = $router->findRoute($request->getMethod(), $request->getUri());
+    /** @var Route $route */
+    $route = $router->findRoute($request->getMethod(), $request->getUri());
 
-if (!$route) {
-    throw new HttpException('route not found', 404);
+    if (!$route) {
+        throw new HttpException('route not found', 404);
+    }
+    echo $route->execAction($request)->getBody();
+} catch (Throwable $e) {
+    echo json_encode($e->getMessage());
 }
-echo $route->execAction($request)->getBody();

@@ -2,25 +2,17 @@ api:
   questions:
     store:
       path: questions
-      controller: App\Controllers\QuestionController
-      action: store
+      controller: Project\UI\Http\Controllers\QuestionController
+      action: create
       methods: POST
     index:
       path: questions
-      controller: App\Controllers\QuestionController
+      controller: Project\UI\Http\Controllers\QuestionController
       action: index
       methods:
         - GET
         - HEAD
-    show:
-      path: questions/:id
-      controller: App\Controllers\QuestionController
-      action: show
-      methods:
-        - GET
-        - HEAD
-    update:
-      path: questions/:id
-      controller: App\Controllers\QuestionController
-      action: update
-      methods: PUT
+commands:
+  cache_clear:
+    name: cache:clear
+    class: Project\UI\Cli\ClearCacheCommand
