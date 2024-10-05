@@ -8,9 +8,9 @@ channels:
       name: application
     daily: true
     days: 7
-  controllers:
-    path: controllers
+  kafka-work:
+    path: kafka
     file:
-      name: controllers
+      name: kafka-work
     daily: true
     days: 7

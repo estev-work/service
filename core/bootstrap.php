@@ -19,7 +19,6 @@ use Project\Modules\Questions\Api\QuestionApiInterface;
 use Project\Modules\Questions\Application\Services\QuestionApplicationService;
 use Project\Modules\Questions\Domain\Repositories\QuestionRepositoryInterface;
 use Project\Modules\Questions\Infrastructure\Repositories\QuestionRepository;
-use Psr\Log\LoggerInterface;
 use RdKafka\Conf;
 use RdKafka\KafkaConsumer;
 use RdKafka\Message;
@@ -42,8 +41,8 @@ $container->singleton(QueryBusInterface::class, function (Container $container) 
 $servicesConfig = Config::get('services');
 $container->bind(MessageBrokerInterface::class, function (Container $container) use ($servicesConfig) {
     /** @var AppLoggerInterface $logger */
-    $logger = $container->get(LoggerInterface::class);
-    $logger->setChannel('kafka-work-log');
+    $logger = resolve(AppLoggerInterface::class);
+    $logger->setChannel('kafka-work');
     $producerConf = new Conf();
     $producerConf->set(
         'metadata.broker.list',

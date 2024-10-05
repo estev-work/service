@@ -48,8 +48,6 @@ final class FileLogger implements AppLoggerInterface
 
     private function writeLog(string $level, string $message, array $context = []): void
     {
-        $this->cleanupOldLogs();
-
         $date = date('Y-m-d H:i:s');
         $logMessage = sprintf("[%s] %s: %s %s\n", $date, strtoupper($level), $message, json_encode($context));
 
@@ -61,6 +59,8 @@ final class FileLogger implements AppLoggerInterface
         }
 
         file_put_contents($logDirectory . '/' . $fileName, $logMessage, FILE_APPEND);
+
+        $this->cleanupOldLogs();
     }
 
     private function cleanupOldLogs(): void
