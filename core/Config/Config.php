@@ -29,9 +29,9 @@ final class Config
 
             return $config;
         } catch (InvalidArgumentException $e) {
-            throw new \Exception('Invalid configuration: ' . $e->getMessage());
+            throw new \InvalidArgumentException('Invalid configuration: ' . $e->getMessage());
         } catch (\Throwable $e) {
-            throw new \Exception('Error loading configuration: ' . $e->getMessage());
+            throw new \InvalidArgumentException('Error loading configuration: ' . $e->getMessage());
         }
     }
 }

@@ -1,0 +1,10 @@
+logger:
+  channel: default
+  production: false
+channels:
+  default:
+    path: application
+    file:
+      name: application
+    daily: true
+    days: 7
