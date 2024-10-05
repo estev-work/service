@@ -10,6 +10,7 @@ final class ClearCacheCommand extends Command
 {
     public function execute(): void
     {
+        $this->logger->debug('Clear cache');
         $this->warn('Not implemented');
     }
 }

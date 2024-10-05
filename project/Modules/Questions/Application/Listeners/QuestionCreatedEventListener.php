@@ -13,7 +13,7 @@ readonly class QuestionCreatedEventListener implements EventListenerInterface
 
     public function __construct()
     {
-        $this->repository = app(QuestionRepository::class);
+        $this->repository = resolve(QuestionRepository::class);
     }
 
     /**

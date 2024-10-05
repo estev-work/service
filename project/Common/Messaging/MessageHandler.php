@@ -16,7 +16,7 @@ readonly class MessageHandler
 
     public function __construct(protected Command $command)
     {
-        $this->eventBus = app(EventBusInterface::class);
+        $this->eventBus = resolve(EventBusInterface::class);
     }
 
     /**

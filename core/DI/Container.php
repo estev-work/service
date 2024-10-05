@@ -6,80 +6,94 @@ declare(strict_types=1);
 namespace Core\DI;
 
 use Exception;
-use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
 use ReflectionException;
 
 final class Container implements ContainerInterface
 {
-    private array $services = [];
+    private array $instances = [];
+    private array $bindings = [];
+
+    public function bind(string $abstract, $concrete): void
+    {
+        $this->bindings[$abstract] = $concrete;
+    }
 
     /**
-     * @throws ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @throws Exception
      */
-    public function get(string $id): object
+    public function get(string $id)
     {
-        if ($this->has($id)) {
-            return $this->services[$id]($this);
+        if (isset($this->instances[$id])) {
+            return $this->instances[$id];
         }
+
+        if (isset($this->bindings[$id])) {
+            $concrete = $this->bindings[$id];
+
+            if (is_callable($concrete)) {
+                return $this->instances[$id] = $concrete($this);
+            }
+
+            return $this->instances[$id] = $this->resolve($concrete);
+        }
+
         return $this->resolve($id);
     }
 
     public function has(string $id): bool
     {
-        return isset($this->services[$id]) || class_exists($id);
-    }
-
-    public function set(string $id, callable $resolver, bool $singleton = false): void
-    {
-        if ($singleton) {
-            $this->services[$id] = function ($c) use ($resolver) {
-                static $instance;
-                if ($instance === null) {
-                    $instance = $resolver($c);
-                }
-                return $instance;
-            };
-        } else {
-            $this->services[$id] = $resolver;
-        }
+        return isset($this->bindings[$id]) || class_exists($id);
     }
 
     /**
      * @throws ReflectionException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      * @throws Exception
      */
-    private function resolve(string $id): object
+    private function resolve(string $class)
     {
-        if (!class_exists($id)) {
-            throw new Exception("Class {$id} does not exist.");
+        $reflector = new ReflectionClass($class);
+
+        if (!$reflector->isInstantiable()) {
+            throw new Exception("Класс {$class} не может быть создан.");
         }
 
-        $reflectionClass = new ReflectionClass($id);
+        $constructor = $reflector->getConstructor();
 
-        if (!$constructor = $reflectionClass->getConstructor()) {
-            return new $id();
+        if (is_null($constructor)) {
+            return $this->instances[$class] = new $class;
         }
 
         $parameters = $constructor->getParameters();
+        $dependencies = $this->resolveDependencies($parameters);
+
+        return $this->instances[$class] = $reflector->newInstanceArgs($dependencies);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function resolveDependencies(array $parameters): array
+    {
         $dependencies = [];
 
         foreach ($parameters as $parameter) {
-            $dependency = $parameter->getClass();
+            $type = $parameter->getType();
 
-            if ($dependency === null) {
-                throw new Exception("Cannot resolve class dependency for {$parameter->name}");
+            if ($type && !$type->isBuiltin()) {
+                $dependency = $type->getName();
+
+                $dependencies[] = $this->get($dependency);
+            } else {
+                if ($parameter->isDefaultValueAvailable()) {
+                    $dependencies[] = $parameter->getDefaultValue();
+                } else {
+                    throw new Exception("Не удалось разрешить зависимость для параметра {$parameter->getName()}");
+                }
             }
-
-            $dependencies[] = $this->get($dependency->name);
         }
 
-        return $reflectionClass->newInstanceArgs($dependencies);
+        return $dependencies;
     }
 }

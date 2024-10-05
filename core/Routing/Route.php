@@ -33,7 +33,7 @@ final class Route
     {
         $controllerClass = $this->getControllerClassName();
         $action = $this->getAction();
-        $controller = new  $controllerClass();
+        $controller = resolve($controllerClass);
         $args = [];
         try {
             $reflectionMethod = new ReflectionMethod($controller, $action);

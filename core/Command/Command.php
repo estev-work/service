@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Core\Command;
 
 use Core\Config\Config;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 
 abstract class Command
 {
-    public function __construct(protected readonly ArgvInput $input)
+    public function __construct(protected readonly ArgvInput $input, protected readonly LoggerInterface $logger)
     {
         $this->runBase();
     }
