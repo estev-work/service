@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Core\Command;
+namespace Core\Console;
 
 use Core\Config\Config;
 use Core\Logger\AppLoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
-abstract class Command
+abstract class ConsoleCommand
 {
     public function __construct(protected readonly InputInterface $input, protected readonly AppLoggerInterface $logger)
     {
@@ -23,7 +23,7 @@ abstract class Command
         try {
             $res = $this->execute($this->input);
             if (!$res) {
-                throw new \Exception('Command not executed');
+                throw new \Exception('ConsoleCommand not executed');
             }
             $this->success('Success');
         } catch (\Throwable $exception) {
@@ -35,7 +35,7 @@ abstract class Command
             if ($config['log']['enable']) {
                 $this->logger->warning($this::class, $exception->getTrace());
             }
-            $this->warn('Command failed');
+            $this->warn('ConsoleCommand failed');
             exit(1);
         }
     }

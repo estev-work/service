@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Project\UI\Cli;
 
-use Core\Command\Command;
+use Core\Console\ConsoleCommand;
 use Project\Modules\Questions\Api\DTO\CreateQuestionDTO;
 use Project\Modules\Questions\Api\QuestionApiInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
-final class CreateQuestionCommand extends Command
+final class CreateQuestionConsoleConsoleCommand extends ConsoleCommand
 {
     public function execute(InputInterface $input): int
     {
@@ -19,12 +19,13 @@ final class CreateQuestionCommand extends Command
             return 0;
         }
         try {
+            $start = microtime(true);
             $service = resolve(QuestionApiInterface::class);
             $DTO = new CreateQuestionDTO($title, $content);
-            $question = $service->createQuestion(
-                $DTO
-            );
+            $question = $service->createQuestion($DTO);
+            $diff = sprintf('%.6f sec.', microtime(true) - $start);
             $this->info('id: ' . $question);
+            $this->info('время создания: ' . $diff);
             return 1;
         } catch (\Exception $exception) {
             $this->log($exception->getMessage());

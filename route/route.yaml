@@ -15,7 +15,7 @@ api:
 commands:
   cache_clear:
     name: cache:clear
-    class: Project\UI\Cli\ClearCacheCommand
+    class: Project\UI\Cli\ClearCacheConsoleConsoleCommand
   create_question:
     name: question:create
-    class: Project\UI\Cli\CreateQuestionCommand
+    class: Project\UI\Cli\CreateQuestionConsoleConsoleCommand

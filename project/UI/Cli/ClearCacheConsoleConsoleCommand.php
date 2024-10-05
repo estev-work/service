@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Project\UI\Cli;
 
-use Core\Command\Command;
+use Core\Console\ConsoleCommand;
 use Symfony\Component\Console\Input\InputInterface;
 
-final class ClearCacheCommand extends Command
+final class ClearCacheConsoleConsoleCommand extends ConsoleCommand
 {
     public function execute(InputInterface $input): int
     {
