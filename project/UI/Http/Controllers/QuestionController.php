@@ -6,13 +6,16 @@ use Core\Http\Request;
 use Core\Response\JsonResponse;
 use Project\Modules\Questions\Api\DTO\CreateQuestionDTO;
 use Project\Modules\Questions\Api\QuestionApiInterface;
+use Psr\Log\LoggerInterface;
 
 class QuestionController
 {
     private QuestionApiInterface $questionApplicationService;
+    private LoggerInterface $logger;
 
-    public function __construct(QuestionApiInterface $questionApplicationService)
+    public function __construct(LoggerInterface $logger, QuestionApiInterface $questionApplicationService)
     {
+        $this->logger = $logger;
         $this->questionApplicationService = $questionApplicationService;
     }
 
