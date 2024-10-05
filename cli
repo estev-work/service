@@ -34,6 +34,6 @@ if (!isset($className)) {
     echo "Команда {$commandName} не найдена.\n";
 }
 if ($className) {
-    $command = new $className($input, $container->get(\Psr\Log\LoggerInterface::class));
+    $command = new $className($input, $container->get(\Core\Logger\AppLoggerInterface::class));
 }
 exit(0);

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Logger;
 
-use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
-final class FileLogger implements LoggerInterface
+final class FileLogger implements AppLoggerInterface
 {
     private array $config;
     private string $channel;

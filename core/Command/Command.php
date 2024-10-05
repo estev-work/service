@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Core\Command;
 
 use Core\Config\Config;
-use Psr\Log\LoggerInterface;
+use Core\Logger\AppLoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 
 abstract class Command
 {
-    public function __construct(protected readonly InputInterface $input, protected readonly LoggerInterface $logger)
+    public function __construct(protected readonly InputInterface $input, protected readonly AppLoggerInterface $logger)
     {
         $this->runBase();
     }

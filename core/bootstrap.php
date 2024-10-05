@@ -5,6 +5,7 @@ require_once __DIR__ . '/global.php';
 
 use Core\Config\Config;
 use Core\DI\Container;
+use Core\Logger\AppLoggerInterface;
 use Core\Logger\FileLogger;
 use Project\Base\Application\Bus\CommandBusInterface;
 use Project\Base\Application\Bus\EventBusInterface;
@@ -28,7 +29,7 @@ use RdKafka\Producer;
 $container = new Container();
 
 $loggerConfig = Config::get('logger');
-$container->bind(LoggerInterface::class, function (Container $container) use ($loggerConfig) {
+$container->bind(AppLoggerInterface::class, function (Container $container) use ($loggerConfig) {
     return new FileLogger($loggerConfig);
 });
 $container->singleton(CommandBusInterface::class, function (Container $container) {
@@ -40,20 +41,21 @@ $container->singleton(QueryBusInterface::class, function (Container $container) 
 
 $servicesConfig = Config::get('services');
 $container->bind(MessageBrokerInterface::class, function (Container $container) use ($servicesConfig) {
-    /** @var LoggerInterface $logger */
+    /** @var AppLoggerInterface $logger */
     $logger = $container->get(LoggerInterface::class);
-    $logger->$producerConf = new Conf();
+    $logger->setChannel('kafka-work-log');
+    $producerConf = new Conf();
     $producerConf->set(
         'metadata.broker.list',
         $servicesConfig['broker']['kafka']['brokers']
     );
-    $producerConf->setDrMsgCb(function (Producer $producer, Message $message) {
+    $producerConf->setDrMsgCb(function (Producer $producer, Message $message) use ($logger) {
         if ($message->err) {
-            Log::channel('kafka')->error(
+            $logger->error(
                 "Message delivery failed: " . rd_kafka_err2str($message->err)
             );
         } else {
-            Log::channel('kafka')->info(
+            $logger->info(
                 "Message delivered to partition " . $message->partition . " at offset " . $message->offset
             );
         }
@@ -91,7 +93,7 @@ $container->singleton(PDO::class, function ($app) {
 });
 
 $container->bind(QuestionRepositoryInterface::class, function (Container $container) {
-    return new QuestionRepository($container->get(PDO::class), $container->get(LoggerInterface::class));
+    return new QuestionRepository($container->get(PDO::class), $container->get(AppLoggerInterface::class));
 });
 
 $GLOBALS['container'] = $container;
