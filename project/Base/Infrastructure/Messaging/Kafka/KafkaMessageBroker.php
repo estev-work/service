@@ -24,20 +24,20 @@ class KafkaMessageBroker implements MessageBrokerInterface
     /**
      * @param string $topicName
      * @param string $key
-     * @param array  $payload
+     * @param string $payload
      *
      * @return void
      */
     public function publish(
         string $topicName,
         string $key = '',
-        array $payload = [],
+        string $payload = '',
     ): void {
         $topic = $this->producer->newTopic($topicName);
         $topic->produce(
             partition: RD_KAFKA_PARTITION_UA,
             msgflags: 0,
-            payload: json_encode(['payload' => $payload]),
+            payload: $payload,
             key: $key,
         );
         $this->producer->poll(10);

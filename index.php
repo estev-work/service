@@ -5,6 +5,7 @@ $container = require __DIR__ . '/core/bootstrap.php';
 use Core\Http\Request;
 use Core\Routing\Route;
 use Core\Routing\Router;
+use Psr\Log\LoggerInterface;
 
 try {
     $router = new Router([
@@ -21,12 +22,18 @@ try {
     }
     echo $route->execAction($request)->getBody();
 } catch (Throwable $e) {
-    header('Content-Type: application/json');
-    echo json_encode([
+    $message = json_encode([
         'error' => $e->getMessage(),
         'code' => $e->getCode(),
         'trace' => $e->getTrace(),
         'file' => $e->getFile(),
         'line' => $e->getLine(),
     ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+    try {
+        $logger = resolve(LoggerInterface::class);
+        $logger->error($message);
+    } catch (Exception $e) {
+    }
+    header('Content-Type: application/json');
+    echo $message;
 }

@@ -58,10 +58,7 @@ class Question extends BaseAggregate
         $instance = new Question($questionId, $questionTitle, $questionContent, DateValue::make(), null);
         $instance->recordEvent(
             new QuestionCreatedEvent(
-                $instance->id()->getValue(),
-                $instance->title()->getOriginalText(),
-                $instance->content()->getOriginalText(),
-                $instance->createdAt()->format()
+                $instance
             )
         );
         return $instance;

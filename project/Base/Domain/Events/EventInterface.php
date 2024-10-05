@@ -8,5 +8,5 @@ interface EventInterface
 
     public function getKey(): string;
 
-    public function getPayload(): array;
+    public function getPayload(): string;
 }

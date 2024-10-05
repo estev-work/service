@@ -18,7 +18,7 @@ interface MessageBrokerInterface
     public function publish(
         string $topicName,
         string $key = '',
-        array $payload = []
+        string $payload = ''
     ): void;
 
     public function subscribe(array $topics): void;

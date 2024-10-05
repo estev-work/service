@@ -6,11 +6,13 @@ use Exception;
 use Project\Base\Application\Bus\CommandBusInterface;
 use Project\Base\Application\Commands\CommandHandlerInterface;
 use Project\Base\Application\Commands\CommandInterface;
-use Project\Common\Attributes\CommandHandler;
+use Project\Common\Attributes\Command;
+use ReflectionClass;
 
 class CommandBus implements CommandBusInterface
 {
-    private array $handlers = [];
+    private array $handlers
+        = [];
 
     /**
      * @throws Exception
@@ -20,6 +22,9 @@ class CommandBus implements CommandBusInterface
         $this->handlers[$this->getCommandForHandler($handler)] = $handler;
     }
 
+    /**
+     * @throws Exception
+     */
     public function handle(CommandInterface $command): mixed
     {
         $commandClass = get_class($command);
@@ -37,10 +42,17 @@ class CommandBus implements CommandBusInterface
      */
     private function getCommandForHandler(CommandHandlerInterface $handler): string
     {
-        $reflectionClass = new \ReflectionClass($handler);
-        $attributes = $reflectionClass->getAttributes(CommandHandler::class);
-        if ($attributes) {
-            return $attributes[0]->getName();
+        $reflectionClass = new ReflectionClass($handler::class);
+
+        $attributes = $reflectionClass->getAttributes(Command::class);
+
+        if (!empty($attributes)) {
+            try {
+                $commandAttribute = $attributes[0]->getArguments();
+                return $commandAttribute["command"];
+            } catch (Exception $exception) {
+                throw new Exception("Command handler for command {$commandClass} not found.");
+            }
         }
         throw new Exception("Handler not has command.");
     }

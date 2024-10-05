@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Project\Common\Attributes;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-class CommandHandler
+class Command
 {
     public string $command;
 

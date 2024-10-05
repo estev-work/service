@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Core\Http;
 
+use Exception;
 use Nyholm\Psr7\Stream;
 use Nyholm\Psr7\Uri;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 final class Request implements ServerRequestInterface
@@ -24,7 +26,7 @@ final class Request implements ServerRequestInterface
     protected array $attributes = [];
 
     private string $protocolVersion = '1.1';
-    protected \Psr\Http\Message\StreamInterface $body;
+    protected StreamInterface $body;
     protected array $uploadedFiles;
 
     public function __construct()
@@ -65,22 +67,29 @@ final class Request implements ServerRequestInterface
 
     public function getParsedBody(): array|string|null
     {
-        $contentType = $this->getHeaderLine('Content-Type');
-        $body = $this->getBody()->getContents();
-        return match (true) {
-            str_contains($contentType, 'application/json') => $this->parseJson($body),
-            str_contains($contentType, 'application/x-www-form-urlencoded') => $this->parseUrlEncoded($body),
-            str_contains($contentType, 'multipart/form-data') => $_POST,
-            str_contains($contentType, 'text/plain') => $body,
-            default => $body ?: null,
-        };
+        try {
+            $contentType = $this->getHeaderLine('Content-Type');
+            $body = $this->getBody()->getContents();
+            return match (true) {
+                str_contains($contentType, 'application/json') => $this->parseJson($body),
+                str_contains($contentType, 'application/x-www-form-urlencoded') => $this->parseUrlEncoded($body),
+                str_contains($contentType, 'multipart/form-data') => $_POST,
+                str_contains($contentType, 'text/plain') => $body,
+                default => $body ?: null,
+            };
+        } catch (\Throwable $throwable) {
+            return null;
+        }
     }
 
+    /**
+     * @throws Exception
+     */
     private function parseJson(string $body): array
     {
         $parsed = json_decode($body, true);
         if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Ошибка при декодировании JSON: ' . json_last_error_msg());
+            throw new Exception('Ошибка при декодировании JSON: ' . json_last_error_msg());
         }
         return $parsed;
     }
@@ -96,12 +105,12 @@ final class Request implements ServerRequestInterface
         return $this->cookies;
     }
 
-    public function getBody(): \Psr\Http\Message\StreamInterface
+    public function getBody(): StreamInterface
     {
         return Stream::create(fopen('php://input', 'r'));
     }
 
-    public function withBody(\Psr\Http\Message\StreamInterface $body): MessageInterface
+    public function withBody(StreamInterface $body): MessageInterface
     {
         $clone = clone $this;
         $clone->body = $body;

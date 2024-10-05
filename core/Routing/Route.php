@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Core\Routing;
 
 use Core\Http\Request;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use ReflectionException;
 use ReflectionMethod;
@@ -29,6 +30,9 @@ final class Route
         $this->params = $this->extractParameters($path);
     }
 
+    /**
+     * @throws Exception
+     */
     public function execAction(Request $request): ResponseInterface|string
     {
         $controllerClass = $this->getControllerClassName();
@@ -46,13 +50,9 @@ final class Route
                 }
             }
         } catch (ReflectionException $e) {
+            throw new Exception('Parameter injection failed: ' . $e->getMessage());
         }
-        try {
-            /** @var mixed $result */
-            return $controller->{$action}($request, ...$args);
-        } catch (\Throwable $e) {
-        }
-        return '';
+        return $controller->{$action}($request, ...$args);
     }
 
     private function getParametersValue(string $uri): array

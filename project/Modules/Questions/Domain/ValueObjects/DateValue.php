@@ -5,8 +5,6 @@ declare(strict_types=1);
 
 namespace Project\Modules\Questions\Domain\ValueObjects;
 
-use Nette\Schema\ValidationException;
-
 final readonly class DateValue
 {
 
@@ -70,7 +68,7 @@ final readonly class DateValue
         return $this->value;
     }
 
-    public function format(string $format = 'Y-m-d H:i:s'): string
+    public function format(string $format = DATE_ATOM): string
     {
         return $this->value->format($format);
     }

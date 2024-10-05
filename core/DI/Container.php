@@ -14,10 +14,17 @@ final class Container implements ContainerInterface
 {
     private array $instances = [];
     private array $bindings = [];
+    private array $singletons = [];
 
-    public function bind(string $abstract, $concrete): void
+    public function bind(string $abstract, \Closure $concrete): void
     {
         $this->bindings[$abstract] = $concrete;
+    }
+
+    public function singleton(string $abstract, \Closure $concrete): void
+    {
+        $this->bindings[$abstract] = $concrete;
+        $this->singletons[$abstract] = true;
     }
 
     /**
@@ -33,13 +40,31 @@ final class Container implements ContainerInterface
             $concrete = $this->bindings[$id];
 
             if (is_callable($concrete)) {
-                return $this->instances[$id] = $concrete($this);
+                $object = $concrete($this);
+
+                if (isset($this->singletons[$id])) {
+                    $this->instances[$id] = $object;
+                }
+
+                return $object;
             }
 
-            return $this->instances[$id] = $this->resolve($concrete);
+            $object = $this->resolve($concrete);
+
+            if (isset($this->singletons[$id])) {
+                $this->instances[$id] = $object;
+            }
+
+            return $object;
         }
 
-        return $this->resolve($id);
+        $object = $this->resolve($id);
+
+        if (isset($this->singletons[$id])) {
+            $this->instances[$id] = $object;
+        }
+
+        return $object;
     }
 
     public function has(string $id): bool
@@ -62,13 +87,13 @@ final class Container implements ContainerInterface
         $constructor = $reflector->getConstructor();
 
         if (is_null($constructor)) {
-            return $this->instances[$class] = new $class;
+            return new $class;
         }
 
         $parameters = $constructor->getParameters();
         $dependencies = $this->resolveDependencies($parameters);
 
-        return $this->instances[$class] = $reflector->newInstanceArgs($dependencies);
+        return $reflector->newInstanceArgs($dependencies);
     }
 
     /**

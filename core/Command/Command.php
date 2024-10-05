@@ -6,21 +6,24 @@ namespace Core\Command;
 
 use Core\Config\Config;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputInterface;
 
 abstract class Command
 {
-    public function __construct(protected readonly ArgvInput $input, protected readonly LoggerInterface $logger)
+    public function __construct(protected readonly InputInterface $input, protected readonly LoggerInterface $logger)
     {
         $this->runBase();
     }
 
-    abstract public function execute(): void;
+    abstract public function execute(InputInterface $input): int;
 
     private function runBase(): void
     {
         try {
-            $this->execute();
+            $res = $this->execute($this->input);
+            if (!$res) {
+                throw new \Exception('Command not executed');
+            }
             $this->success('Success');
         } catch (\Throwable $exception) {
             $this->printError($exception->getMessage());
@@ -54,6 +57,7 @@ abstract class Command
     {
         $color1 = "\033[32m";
         $resetColor = "\033[0m";
+        $this->logger->info($color1 . $message . $resetColor);
 
         print $color1 . $message . $resetColor . PHP_EOL;
     }
@@ -62,6 +66,7 @@ abstract class Command
     {
         $color1 = "\033[91m";
         $resetColor = "\033[0m";
+        $this->logger->error($color1 . $message . $resetColor);
 
         print $color1 . $message . $resetColor . PHP_EOL;
     }
@@ -70,7 +75,7 @@ abstract class Command
     {
         $color1 = "\033[91m";
         $resetColor = "\033[0m";
-
+        $this->logger->info($color1 . $message . $resetColor);
         print $color1 . $message . $resetColor . PHP_EOL;
     }
 }

@@ -16,3 +16,6 @@ commands:
   cache_clear:
     name: cache:clear
     class: Project\UI\Cli\ClearCacheCommand
+  create_question:
+    name: question:create
+    class: Project\UI\Cli\CreateQuestionCommand

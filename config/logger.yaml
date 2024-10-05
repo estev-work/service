@@ -8,3 +8,9 @@ channels:
       name: application
     daily: true
     days: 7
+  controllers:
+    path: controllers
+    file:
+      name: controllers
+    daily: true
+    days: 7

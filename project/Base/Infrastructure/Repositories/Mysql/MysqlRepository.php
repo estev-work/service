@@ -2,9 +2,11 @@
 
 namespace Project\Base\Infrastructure\Repositories\Mysql;
 
+use Exception;
 use PDO;
 use Project\Base\Infrastructure\Repositories\DbRepositoryInterface;
 use Project\Common\Attributes\Table;
+use Psr\Log\LoggerInterface;
 use ReflectionClass;
 
 class MysqlRepository implements DbRepositoryInterface
@@ -12,6 +14,9 @@ class MysqlRepository implements DbRepositoryInterface
     protected PDO $connection;
     protected string $table;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(
         PDO $connection,
         protected readonly LoggerInterface $logger,
@@ -20,6 +25,9 @@ class MysqlRepository implements DbRepositoryInterface
         $this->table = $this->resolveTableName();
     }
 
+    /**
+     * @throws Exception
+     */
     private function resolveTableName(): string
     {
         $reflection = new ReflectionClass($this);
