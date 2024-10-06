@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Project\UI\Cli;
+namespace Project\Endpoint\Console;
 
 use Core\Console\ConsoleCommand;
 use Project\Modules\Questions\Api\DTO\CreateQuestionDTO;

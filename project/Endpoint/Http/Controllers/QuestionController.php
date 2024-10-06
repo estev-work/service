@@ -1,6 +1,6 @@
 <?php
 
-namespace Project\UI\Http\Controllers;
+namespace Project\Endpoint\Http\Controllers;
 
 use Core\Http\Request;
 use Core\Response\JsonResponse;

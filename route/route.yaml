@@ -2,12 +2,12 @@ api:
   questions:
     store:
       path: questions
-      controller: Project\UI\Http\Controllers\QuestionController
+      controller: Project\Endpoint\Http\Controllers\QuestionController
       action: create
       methods: POST
     index:
       path: questions
-      controller: Project\UI\Http\Controllers\QuestionController
+      controller: Project\Endpoint\Http\Controllers\QuestionController
       action: index
       methods:
         - GET
@@ -15,7 +15,7 @@ api:
 commands:
   cache_clear:
     name: cache:clear
-    class: Project\UI\Cli\ClearCacheConsoleConsoleCommand
+    class: Project\Endpoint\Console\ClearCacheConsoleConsoleCommand
   create_question:
     name: question:create
-    class: Project\UI\Cli\CreateQuestionConsoleConsoleCommand
+    class: Project\Endpoint\Console\CreateQuestionConsoleConsoleCommand
