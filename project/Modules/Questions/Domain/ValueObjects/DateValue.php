@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Modules\Questions\Domain\ValueObjects;
 
 final readonly class DateValue

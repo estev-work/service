@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Base\Infrastructure\Events;
 
 use Project\Base\Application\Bus\EventBusInterface;

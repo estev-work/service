@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Base\Application\Commands;
 
 abstract class AbstractCommandHandler

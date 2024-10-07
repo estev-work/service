@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Modules\Questions\Domain\ValueObjects;
 
-use Nette\Schema\ValidationException;
+use Exception;
 
 final class QuestionContent
 {
@@ -15,12 +14,15 @@ final class QuestionContent
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fromString(string $value): self
     {
         if ($value !== '') {
             return new self($value);
         }
-        throw new ValidationException('Invalid question title.');
+        throw new Exception('Invalid question title.');
     }
 
     private function getHash(): string

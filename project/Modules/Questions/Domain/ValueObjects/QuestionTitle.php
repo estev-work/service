@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Modules\Questions\Domain\ValueObjects;
 
-use Nette\Schema\ValidationException;
+
+use Exception;
 
 final readonly class QuestionTitle
 {
@@ -13,12 +13,15 @@ final readonly class QuestionTitle
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fromString(string $value): self
     {
         if ($value !== '') {
             return new self($value);
         }
-        throw new ValidationException('Invalid question title.');
+        throw new Exception('Invalid question title.');
     }
 
     public function equals(QuestionTitle $questionTitle): bool

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-
 namespace Project\Modules\Questions\Domain\ValueObjects;
 
-use Nette\Schema\ValidationException;
+use Exception;
 use Symfony\Component\Uid\Uuid;
 
 final readonly class QuestionId
@@ -19,12 +18,15 @@ final readonly class QuestionId
         return new self(Uuid::v7());
     }
 
+    /**
+     * @throws Exception
+     */
     public static function fromString(string $value): self
     {
         if (Uuid::isValid($value)) {
             return new self(Uuid::fromString($value));
         }
-        throw new ValidationException('Invalid question id');
+        throw new Exception('Invalid question id');
     }
 
     public function equals(QuestionId $questionId): bool
