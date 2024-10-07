@@ -5,28 +5,26 @@ deptrac:
   paths:
     - ./project
     - ./core
-
   exclude_files: ~
-
   layers:
     - name: Domain
       collectors:
         - type: directory
-          value: ./project/\w+/Domain/*.*
+          value: ./project/.*.*/Domain/.*
     - name: Application
       collectors:
         - type: directory
-          value: ./project/\w+/Application/*.*
+          value: ./project/.*.*/Application/.*
     - name: Api
       collectors:
         - type: directory
-          value: ./project/\w+/Api/.*
+          value: ./project/.*.*/Api/.*
     - name: Infrastructure
       collectors:
         - type: bool
           must:
             - type: directory
-              value: ./project/\w+/Infrastructure/*.*
+              value: ./project/.*.*/Infrastructure/.*
     - name: Core
       collectors:
         - type: directory
@@ -34,12 +32,13 @@ deptrac:
     - name: Endpoint
       collectors:
         - type: directory
-          value: ./project/Endpoint/*.*
+          value: ./project/Endpoint/.*
   ruleset:
     Domain: [ ]
     Application:
       - Application
       - Domain
+      - Api
     Api:
       - Application
     Infrastructure:
