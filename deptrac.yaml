@@ -1,39 +1,52 @@
 deptrac:
+  analyser:
+    types:
+      - "use"
   paths:
     - ./project
     - ./core
+
   exclude_files: ~
+
   layers:
     - name: Domain
       collectors:
         - type: directory
-          pattern: 'project/**/(Base|Modules/*)/Domain/**'
+          value: ./project/\w+/Domain/*.*
     - name: Application
       collectors:
         - type: directory
-          pattern: 'project/**/(Base|Modules/*)/Application/**'
+          value: ./project/\w+/Application/*.*
     - name: Api
       collectors:
         - type: directory
-          pattern: 'project/**/Modules/*/Api/**'
+          value: ./project/\w+/Api/.*
     - name: Infrastructure
       collectors:
-        - type: directory
-          pattern: 'project/**/(Base|Modules/*)/Infrastructure/**'
+        - type: bool
+          must:
+            - type: directory
+              value: ./project/\w+/Infrastructure/*.*
     - name: Core
       collectors:
         - type: directory
-          pattern: 'core/**'
-
+          value: ./core/.*
+    - name: Endpoint
+      collectors:
+        - type: directory
+          value: ./project/Endpoint/*.*
   ruleset:
     Domain: [ ]
     Application:
+      - Application
       - Domain
     Api:
-      - Domain
       - Application
     Infrastructure:
       - Domain
       - Application
-      - Api
       - Core
+    Endpoint:
+      - Core
+      - Api
+    Core: ~

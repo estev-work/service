@@ -1,0 +1,18 @@
+deptrac:
+  paths:
+    - ./project
+  exclude_files:
+    - ./project/.*\/Infrastructure/Api/.*
+  layers:
+    - name: Questions
+      collectors:
+        - type: directory
+          value: /project/Modules/Questions/.*
+    - name: Base
+      collectors:
+        - type: directory
+          value: /project/Base/.*
+  ruleset:
+    Base: [ Base ]
+    Question:
+      - Base
