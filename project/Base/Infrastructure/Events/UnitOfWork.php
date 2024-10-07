@@ -6,10 +6,11 @@ declare(strict_types=1);
 namespace Project\Base\Infrastructure\Events;
 
 use Project\Base\Application\Bus\EventBusInterface;
+use Project\Base\Application\Events\UnitOfWorkInterface;
 use Project\Base\Domain\AggregateRootInterface;
 use Project\Base\Domain\Events\EventInterface;
 
-final class UnitOfWork
+final class UnitOfWork implements UnitOfWorkInterface
 {
     private EventBusInterface $eventBus;
     private array $aggregates = [];

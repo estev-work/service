@@ -10,9 +10,11 @@ use Core\Logger\FileLogger;
 use Project\Base\Application\Bus\CommandBusInterface;
 use Project\Base\Application\Bus\EventBusInterface;
 use Project\Base\Application\Bus\QueryBusInterface;
+use Project\Base\Application\Events\UnitOfWorkInterface;
 use Project\Base\Infrastructure\Bus\CommandBus;
 use Project\Base\Infrastructure\Bus\EventBus;
 use Project\Base\Infrastructure\Bus\QueryBus;
+use Project\Base\Infrastructure\Events\UnitOfWork;
 use Project\Base\Infrastructure\Messaging\Kafka\KafkaMessageBroker;
 use Project\Base\Infrastructure\Messaging\MessageBrokerInterface;
 use Project\Modules\Questions\Api\QuestionApiInterface;
@@ -73,6 +75,9 @@ $container->bind(MessageBrokerInterface::class, function (Container $container) 
 });
 $container->singleton(EventBusInterface::class, function (Container $container) {
     return new EventBus(resolve(MessageBrokerInterface::class));
+});
+$container->singleton(UnitOfWorkInterface::class, function (Container $container) {
+    return new UnitOfWork(resolve(EventBusInterface::class));
 });
 $container->bind(QuestionApiInterface::class, function (Container $container) {
     return new QuestionApplicationService($container->get(CommandBusInterface::class));
