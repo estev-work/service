@@ -1,0 +1,24 @@
+api:
+  activities:
+    store:
+      path: activities
+      controller: Project\Endpoint\Http\Controllers\ActivityController
+      action: create
+      methods: POST
+    index:
+      path: activities
+      controller: Project\Endpoint\Http\Controllers\ActivityController
+      action: index
+      methods:
+        - GET
+        - HEAD
+commands:
+  cache_clear:
+    name: cache:clear
+    class: Project\Endpoint\Console\ClearCacheConsoleConsoleCommand
+  create_activity:
+    name: activity:create
+    class: Project\Endpoint\Console\CreateActivityConsoleConsoleCommand
+  queue_consumer:
+    name: event:consume
+    class: Project\Endpoint\Console\Consumers\EventConsoleCommand

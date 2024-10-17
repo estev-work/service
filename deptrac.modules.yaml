@@ -1,0 +1,21 @@
+deptrac:
+  analyser:
+    types:
+      - "use"
+  paths:
+    - ./project
+  exclude_files:
+    - ./project/\w+/Api/.*
+    - ./project/Base/.*
+  layers:
+    - name: Activities
+      collectors:
+        - type: classLike
+          value: .*\\Activities\\.*
+    - name: Notifications
+      collectors:
+        - type: classLike
+          value: .*\\Notifications\\.*
+  ruleset:
+    Activity: ~
+    Notifications: ~

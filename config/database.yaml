@@ -1,0 +1,8 @@
+default: mysql
+connections:
+  mysql:
+    host: mysql
+    port: 3306
+    database: service
+    username: user
+    password: password

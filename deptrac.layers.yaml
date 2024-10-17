@@ -1,0 +1,42 @@
+deptrac:
+  analyser:
+    types:
+      - "use"
+  paths:
+    - ./project
+  exclude_files:
+    - ./core/.*
+  layers:
+    - name: Domain
+      collectors:
+        - type: classLike
+          value: .*\\Domain\\.*
+
+    - name: Application
+      collectors:
+        - type: classLike
+          value: .*\\Application\\.*
+
+    - name: Api
+      collectors:
+        - type: classLike
+          value: .*\\Api\\.*
+
+    - name: Infrastructure
+      collectors:
+        - type: classLike
+          value: .*\\Infrastructure\\.*
+  ruleset:
+    Domain:
+      - Domain
+    Application:
+      - Application
+      - Domain
+      - Api
+    Api:
+      - Api
+      - Application
+    Infrastructure:
+      - Infrastructure
+      - Domain
+      - Application

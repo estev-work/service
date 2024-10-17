@@ -1,0 +1,22 @@
+logger:
+  channel: default
+  production: false
+channels:
+  default:
+    path: application
+    file:
+      name: application
+    daily: true
+    days: 7
+  console:
+    path: console
+    file:
+      name: console
+    daily: true
+    days: 7
+  kafka-work:
+    path: kafka
+    file:
+      name: kafka-work
+    daily: true
+    days: 7
