@@ -56,7 +56,7 @@ class KafkaMessageBroker implements MessageBrokerInterface
         foreach ($topics as $topic) {
             $subscribeTopics[] = EventHelper::getTopicName($topic);
         }
-        $this->consumer->subscribe($subscribeTopics);
+        $this->consumer->subscribe([...$subscribeTopics]);
     }
 
     /**

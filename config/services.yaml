@@ -2,4 +2,4 @@ broker:
   kafka:
     client_id: queue_client
     group_id: queue_group
-    brokers: kafka1:19092
+    brokers: kafka1:19092,kafka2:19093,kafka3:19094

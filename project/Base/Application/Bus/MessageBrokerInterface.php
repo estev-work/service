@@ -11,7 +11,7 @@ interface MessageBrokerInterface
      *
      * @param string $topicName
      * @param string $key
-     * @param array  $payload
+     * @param string $payload
      *
      * @return void
      */

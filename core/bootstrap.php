@@ -42,6 +42,7 @@ $container->singleton(QueryBusInterface::class, function (Container $container) 
     return new QueryBus();
 });
 $container->singleton(MessageHandlerInterface::class, function (Container $container) {
+    /** @var FileLogger $logger */
     $logger = resolve(AppLoggerInterface::class);
     $logger->setChannel('kafka-work');
     return new MessageHandler($logger);
@@ -81,10 +82,14 @@ $container->bind(MessageBrokerInterface::class, function (Container $container) 
     return new KafkaMessageBroker($producer, $consumer);
 });
 $container->singleton(EventBusInterface::class, function (Container $container) {
-    return new EventBus(resolve(MessageBrokerInterface::class));
+    /** @var MessageBrokerInterface $broker */
+    $broker = resolve(MessageBrokerInterface::class);
+    return new EventBus($broker);
 });
 $container->singleton(UnitOfWorkInterface::class, function (Container $container) {
-    return new UnitOfWork(resolve(EventBusInterface::class));
+    /** @var EventBusInterface $eventBus */
+    $eventBus = resolve(EventBusInterface::class);
+    return new UnitOfWork($eventBus);
 });
 $container->bind(ActivityApiInterface::class, function (Container $container) {
     return new ActivityApplicationService($container->get(CommandBusInterface::class));

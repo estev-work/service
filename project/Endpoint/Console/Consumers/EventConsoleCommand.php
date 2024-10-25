@@ -8,6 +8,7 @@ use Core\Console\ConsoleCommand;
 use Exception;
 use Project\Base\Application\Bus\MessageBrokerInterface;
 use Project\Base\Application\Events\MessageHandlerInterface;
+use RdKafka\Consumer;
 use RdKafka\Message;
 use Symfony\Component\Console\Input\InputInterface;
 
@@ -20,11 +21,12 @@ final class EventConsoleCommand extends ConsoleCommand
     public function execute(InputInterface $input): int
     {
         $this->info('Starting to consume...');
+        /** @var MessageBrokerInterface $broker */
         $broker = resolve(MessageBrokerInterface::class);
         $broker->subscribe(['activity.created']);
         while (true) {
             $consumer = $broker->getConsumer();
-            $message = $consumer->consume(30 * 1000);
+            $message = $consumer->consume(10 * 1000);
             if ($message->err) {
                 if ($message->err === RD_KAFKA_RESP_ERR__PARTITION_EOF) {
                     $this->info('No more messages, waiting for more...');

@@ -11,14 +11,12 @@ use Symfony\Component\Console\Input\InputInterface;
 
 abstract class ConsoleCommand
 {
-    protected readonly AppLoggerInterface $logger;
 
     /**
      * @throws Exception
      */
-    public function __construct(protected readonly InputInterface $input)
+    public function __construct(protected readonly InputInterface $input,protected readonly  AppLoggerInterface $logger)
     {
-        $this->logger = resolve(AppLoggerInterface::class);
         $this->logger->setChannel(Config::get('console.log.chanel'));
         $this->runBase();
     }

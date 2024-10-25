@@ -15,10 +15,10 @@ api:
 commands:
   cache_clear:
     name: cache:clear
-    class: Project\Endpoint\Console\ClearCacheConsoleConsoleCommand
+    class: Project\Endpoint\Console\ClearCacheConsoleCommand
   create_activity:
     name: activity:create
-    class: Project\Endpoint\Console\CreateActivityConsoleConsoleCommand
+    class: Project\Endpoint\Console\CreateActivityConsoleCommand
   queue_consumer:
     name: event:consume
     class: Project\Endpoint\Console\Consumers\EventConsoleCommand
