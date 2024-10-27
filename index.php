@@ -1,6 +1,7 @@
 <?php
-
-$container = require __DIR__ . '/core/bootstrap.php';
+require __DIR__ . '/core/bootstrap.php';
+require __DIR__ . '/core/global.php';
+$container = bootstrap();
 
 use Core\Http\Request;
 use Core\Routing\Route;

@@ -2,6 +2,7 @@
 
 namespace Project\Modules\Notifications\Application\Services;
 
+use Core\Logger\AppLoggerInterface;
 use Exception;
 use Project\Base\Application\Bus\CommandBusInterface;
 use Project\Modules\Notifications\Api\DTO\CreateNotificationDTO;
@@ -23,19 +24,23 @@ readonly class NotificationApplicationService implements NotificationApiInterfac
      */
     public function createNotification(CreateNotificationDTO $data): string
     {
-        //TODO проверки для функции и try catch
         $command = new CreateNotificationCommand(
             $data->title,
             $data->content
         );
-        $this->commandBus->register(resolve(CreateNotificationHandler::class));
+        /** @var CreateNotificationHandler $handler */
+        $handler = resolve(CreateNotificationHandler::class);
+        $this->commandBus->register($handler);
         /** @var Notification $activity */
         $activity = $this->commandBus->handle($command);
         return $activity->id()->getValue();
     }
 
+    /**
+     * @throws Exception
+     */
     public function getListeners(): array
     {
-        return [new NotificationListener($this)];
+        return [new NotificationListener($this, resolve(AppLoggerInterface::class))];
     }
 }
