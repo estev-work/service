@@ -2,26 +2,11 @@
 
 namespace Project\Base\Application\Bus;
 
-use RdKafka\KafkaConsumer;
+use Project\Base\Domain\Events\EventInterface;
 
 interface MessageBrokerInterface
 {
-    /**
-     * Публикует событие в брокер сообщений.
-     *
-     * @param string $topicName
-     * @param string $key
-     * @param array  $payload
-     *
-     * @return void
-     */
-    public function publish(
-        string $topicName,
-        string $key = '',
-        string $payload = ''
-    ): void;
+    public function publish(EventInterface $event): void;
 
-    public function subscribe(array $topics): void;
-
-    public function getConsumer(): KafkaConsumer;
+    public function subscribe(string $queueName, callable $callback): void;
 }

@@ -5,7 +5,6 @@ namespace Project\Base\Infrastructure\Bus;
 use Project\Base\Application\Bus\EventBusInterface;
 use Project\Base\Application\Bus\MessageBrokerInterface;
 use Project\Base\Domain\Events\EventInterface;
-use Project\Common\EventHelper;
 
 class EventBus implements EventBusInterface
 {
@@ -18,12 +17,7 @@ class EventBus implements EventBusInterface
 
     public function publish(EventInterface $event): void
     {
-        $topic = EventHelper::getTopicName($event::class);
-        $message = [
-            'eventName' => $event->getName(),
-            'payload' => $event->getPayload(),
-        ];
-        $this->broker->publish($topic, $event->getKey(), json_encode($message));
+        $this->broker->publish($event);
     }
 
     public function subscribe(EventInterface $event): void

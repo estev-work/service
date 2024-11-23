@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Глобальная функция для получения экземпляра класса через контейнер
  *
@@ -8,7 +7,7 @@
  * @return object
  * @throws Exception
  */
-function resolve(string $class): object
+function resolve(string $class): mixed
 {
     if (!isset($GLOBALS['container'])) {
         throw new RuntimeException("Контейнер не найден.");

@@ -4,7 +4,7 @@ namespace Project\Base\Application\Events;
 
 interface MessageHandlerInterface
 {
-    public function prepareMessage(string $key, string $payload, array $headers): EventDataInterface;
+    public function handleMessage(string $eventName, array $payload = [], array $headers = []): bool;
 
     /**
      * @param EventListenerInterface[] $listeners

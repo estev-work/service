@@ -1,7 +1,9 @@
 <?php
+declare(strict_types=1);
 
 namespace Project\Modules\Activities\Domain;
 
+use Exception;
 use Project\Base\Domain\BaseAggregate;
 use Project\Modules\Activities\Domain\Events\ActivityCreatedEvent;
 use Project\Modules\Activities\Domain\ValueObjects\ActivityContent;
@@ -9,7 +11,7 @@ use Project\Modules\Activities\Domain\ValueObjects\ActivityId;
 use Project\Modules\Activities\Domain\ValueObjects\ActivityTitle;
 use Project\Modules\Activities\Domain\ValueObjects\DateValue;
 
-class Activity extends BaseAggregate
+final class Activity extends BaseAggregate
 {
     private readonly ActivityId $id;
     private ActivityTitle $title;
@@ -18,12 +20,13 @@ class Activity extends BaseAggregate
     private ?DateValue $updatedAt;
 
     private function __construct(
-        ActivityId $id,
-        ActivityTitle $title,
+        ActivityId      $id,
+        ActivityTitle   $title,
         ActivityContent $content,
-        DateValue $createdAt,
-        ?DateValue $updatedAt
-    ) {
+        DateValue       $createdAt,
+        ?DateValue      $updatedAt
+    )
+    {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
@@ -31,13 +34,17 @@ class Activity extends BaseAggregate
         $this->updatedAt = $updatedAt;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function from(
         string $id,
         string $title,
         string $content,
         string $createdAt,
         string $updatedAt = null
-    ): self {
+    ): self
+    {
         $activityId = ActivityId::fromString($id);
         $activityTitle = ActivityTitle::fromString($title);
         $activityContent = ActivityContent::fromString($content);
