@@ -20,3 +20,21 @@ channels:
       name: kafka-work
     daily: true
     days: 7
+  rabbitmq-work:
+    path: rabbitmq
+    file:
+      name: rabbitmq-work
+    daily: true
+    days: 7
+  message-handler:
+    path: messages
+    file:
+      name: message-handler
+    daily: true
+    days: 7
+  notifications:
+    path: notifications
+    file:
+      name: notifications
+    daily: true
+    days: 7

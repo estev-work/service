@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace Project\Modules\Notifications\Application\Events\Handlers;
 
-use Project\Base\Application\Events\EventDataInterface;
+use Core\Logger\AppLoggerInterface;
 use Project\Base\Application\Events\EventHandlerInterface;
-use Project\Common\Attributes\EventHandler;
+use Project\Base\Application\Events\MessageInterface;
 
-#[EventHandler(eventName: 'activity-created')]
-final class ActivityCreateEventHandler implements EventHandlerInterface
+final readonly class ActivityCreateEventHandler implements EventHandlerInterface
 {
-
-    public function handle(EventDataInterface $event)
+    public function __construct(private AppLoggerInterface $logger)
     {
-        // TODO: Implement handle() method.
+        $this->logger->setChannel('notifications');
+    }
+
+    public function handle(MessageInterface $event): void
+    {
+        $this->logger->debug('Message handle ActivityCreateEventHandler', ['message' => [
+            'key'=>$event->getKey(),
+            'name'=> $event->getName(),
+            'payload'=> $event->getPayload(),
+        ]]);
     }
 }
