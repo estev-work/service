@@ -1,16 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Project\Providers\Services;
 
 use Core\Config\Config;
+use Core\DI\DIContainerInterface;
 use PDO;
 use Project\Providers\ProviderInterface;
-use Psr\Container\ContainerInterface;
 
 final class PDOProvider implements ProviderInterface
 {
-    public function load(ContainerInterface $serviceContainer): void
+    public function load(DIContainerInterface $serviceContainer): void
     {
         $serviceContainer->singleton(PDO::class, function () {
             $dsn = "mysql:host=" . Config::get('database.connections.mysql.host')

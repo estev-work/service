@@ -5,7 +5,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use Core\DI\Container;
 use Core\Logger\AppLoggerInterface;
 
-function bootstrap(): Container
+/**
+ * @throws Exception
+ */
+function bootstrap(): \Core\DI\DIContainerInterface
 {
     try {
         $container = new Container();
@@ -16,13 +19,15 @@ function bootstrap(): Container
             new \Project\Providers\Services\Bus\CommandBusProvider(),
             new \Project\Providers\Services\Bus\QueryBusProvider(),
             new \Project\Providers\Services\MessageBrokerProvider(),
-            new \Project\Providers\Services\MessageHandlerProvider(),
             new \Project\Providers\Services\Bus\EventBusProvider(),
             new \Project\Providers\Services\UnitOfWorkProvider(),
             new \Project\Providers\Services\Modules\ApiProvider(),
             new \Project\Providers\Services\Modules\RepositoryProvider(),
         );
-    }catch (\Throwable $exception){
+
+        $GLOBALS['container'] = $container;
+        return $container;
+    } catch (\Throwable $exception) {
         $message = json_encode([
             'error' => $exception->getMessage(),
             'code' => $exception->getCode(),
@@ -38,6 +43,5 @@ function bootstrap(): Container
         header('Content-Type: application/json');
         echo $message;
     }
-    $GLOBALS['container'] = $container;
-    return $container;
+    throw new Exception('Internal Error');
 }

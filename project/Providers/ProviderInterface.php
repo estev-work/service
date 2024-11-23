@@ -2,13 +2,13 @@
 
 namespace Project\Providers;
 
+use Core\DI\DIContainerInterface;
 use Exception;
-use Psr\Container\ContainerInterface;
 
 interface ProviderInterface
 {
     /**
      * @throws Exception
      */
-    public function load(ContainerInterface $serviceContainer): void;
+    public function load(DIContainerInterface $serviceContainer): void;
 }

@@ -7,7 +7,12 @@ require __DIR__ . '/core/global.php';
 use Core\Config\ConfigLoader;
 use Symfony\Component\Console\Input\ArgvInput;
 
-$container = bootstrap();
+try {
+    $container = bootstrap();
+} catch (Exception $e) {
+    echo("Bootstrap failed: " . $e->getMessage() . "\n");
+    exit(1);
+}
 $input = new ArgvInput();
 $routePath = __DIR__ . '/route/route.yaml';
 $config = ConfigLoader::load($routePath);
