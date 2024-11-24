@@ -9,8 +9,8 @@ readonly class CreateActivityDTO
      * @param string $content
      */
     public function __construct(
-        public string $title,
-        public string $content
+        private(set) string $title,
+        private(set) string $content
     ) {
     }
 }

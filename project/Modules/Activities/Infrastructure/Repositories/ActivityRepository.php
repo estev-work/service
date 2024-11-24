@@ -18,27 +18,33 @@ class ActivityRepository extends MysqlRepository implements ActivityRepositoryIn
     {
         try {
             $data = [
-                'id' => $activity->id()->getValue(),
-                'title' => $activity->title()->getOriginalText(),
-                'content' => $activity->content()->getOriginalText(),
-                'created_at' => $activity->createdAt()->format('Y-m-d H:i:s'),
-                'updated_at' => $activity->updatedAt()?->format('Y-m-d H:i:s'),
+                'id' => $activity->id->toString(),
+                'title' => $activity->title->value,
+                'content' => $activity->content->value,
+                'created_at' => $activity->createdAt->format('Y-m-d H:i:s'),
+                'updated_at' => $activity->updatedAt?->format('Y-m-d H:i:s'),
             ];
             $query
                 = 'INSERT INTO ma_activities (id, title, content, created_at, updated_at) VALUES(:id, :title, :content, :created_at, :updated_at) ON DUPLICATE KEY UPDATE id=:id, title=:title';
             $this->raw($query, $data);
-            return $activity->id()->getValue();
+            return $activity->id->toString();
         } catch (\Throwable $exception) {
             $this->logger->error($exception->getMessage(), $exception->getTrace());
             return null;
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function findByActivityId(string $id): ?Activity
     {
         throw new Exception('Not implemented');
     }
 
+    /**
+     * @throws Exception
+     */
     public function findAllActivities(): array
     {
         throw new Exception('Not implemented');

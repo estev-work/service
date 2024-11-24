@@ -31,7 +31,7 @@ class CreateActivityHandler extends AbstractCommandHandler implements CommandHan
     public function execute(CommandInterface $command): Activity
     {
         $this->assertCorrectCommand($command, CreateActivityCommand::class);
-        $activity = Activity::createNew($command->getTitle(), $command->getContent());
+        $activity = Activity::createNew($command->title, $command->content);
         $this->unitOfWork->registerAggregateRoot($activity);
         $this->activityRepository->saveActivity($activity);
         $this->unitOfWork->commit();

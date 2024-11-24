@@ -4,38 +4,31 @@ declare(strict_types=1);
 
 namespace Project\Modules\Activities\Domain\ValueObjects;
 
-use Exception;
+use Project\Base\Domain\Exceptions\DomainLayerException;
+
+use function PHPUnit\Framework\isEmpty;
 
 final class ActivityContent
 {
-    private ?string $hash = null;
+    private ?string $hash = null {
+        get => isEmpty($this->hash) ? $this->hash = md5($this->value) : $this->hash;
+    }
 
-    private function __construct(private readonly string $value)
+    private function __construct(private(set) readonly string $value)
     {
     }
 
-    /**
-     * @throws Exception
-     */
     public static function fromString(string $value): self
     {
         if ($value !== '') {
-            return new self($value);
+            return new ActivityContent($value);
         }
-        throw new Exception('Invalid activity title.');
-    }
-
-    private function getHash(): string
-    {
-        if ($this->hash === null) {
-            $this->hash = md5($this->getOriginalText());
-        }
-        return $this->hash;
+        throw new DomainLayerException('Invalid activity title.');
     }
 
     public function equals(ActivityContent $activityTitle): bool
     {
-        if ($this->getHash() === $activityTitle->getHash()) {
+        if ($this->hash === $activityTitle->hash) {
             return true;
         }
 
@@ -45,10 +38,5 @@ final class ActivityContent
     public function getText(): string
     {
         return strip_tags($this->value);
-    }
-
-    public function getOriginalText(): string
-    {
-        return $this->value;
     }
 }

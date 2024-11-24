@@ -29,7 +29,7 @@ readonly class ActivityApplicationService implements ActivityApiInterface
         $this->commandBus->register(resolve(CreateActivityHandler::class));
         /** @var Activity $activity */
         $activity = $this->commandBus->handle($command);
-        return $activity->id()->getValue();
+        return $activity->id->toString();
     }
 
     public function getListeners(): array

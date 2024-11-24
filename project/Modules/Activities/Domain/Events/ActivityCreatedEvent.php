@@ -15,10 +15,10 @@ readonly class ActivityCreatedEvent implements EventInterface
     public function __construct(
         Activity $activity,
     ) {
-        $this->activityId = $activity->id()->getValue();
-        $this->title = $activity->title()->getOriginalText();
-        $this->content = $activity->content()->getOriginalText();
-        $this->createdAt = $activity->createdAt()->format();
+        $this->activityId = $activity->id->toString();
+        $this->title = $activity->title->value;
+        $this->content = $activity->content->value;
+        $this->createdAt = $activity->createdAt->format();
     }
 
     public function getName(): string

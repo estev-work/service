@@ -1,32 +1,32 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Project\Modules\Activities\Domain;
 
 use Exception;
 use Project\Base\Domain\BaseAggregate;
+use Project\Base\Domain\ValueObjects\DateValue;
+use Project\Base\Domain\ValueObjects\Identifier;
+use Project\Base\Domain\ValueObjects\Title;
 use Project\Modules\Activities\Domain\Events\ActivityCreatedEvent;
 use Project\Modules\Activities\Domain\ValueObjects\ActivityContent;
-use Project\Modules\Activities\Domain\ValueObjects\ActivityId;
-use Project\Modules\Activities\Domain\ValueObjects\ActivityTitle;
-use Project\Modules\Activities\Domain\ValueObjects\DateValue;
 
 final class Activity extends BaseAggregate
 {
-    private readonly ActivityId $id;
-    private ActivityTitle $title;
-    private ActivityContent $content;
-    private readonly DateValue $createdAt;
-    private ?DateValue $updatedAt;
+    private(set) Identifier $id;
+    private(set) Title $title;
+    private(set) ActivityContent $content;
+    private(set) DateValue $createdAt;
+    private(set) ?DateValue $updatedAt;
 
     private function __construct(
-        ActivityId      $id,
-        ActivityTitle   $title,
+        Identifier $id,
+        Title $title,
         ActivityContent $content,
-        DateValue       $createdAt,
-        ?DateValue      $updatedAt
-    )
-    {
+        DateValue $createdAt,
+        ?DateValue $updatedAt
+    ) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
@@ -42,25 +42,24 @@ final class Activity extends BaseAggregate
         string $title,
         string $content,
         string $createdAt,
-        string $updatedAt = null
-    ): self
-    {
-        $activityId = ActivityId::fromString($id);
-        $activityTitle = ActivityTitle::fromString($title);
+        ?string $updatedAt = null
+    ): self {
+        $activityId = Identifier::fromString($id);
+        $activityTitle = Title::fromString($title);
         $activityContent = ActivityContent::fromString($content);
-        return new self(
-            $activityId,
-            $activityTitle,
-            $activityContent,
-            DateValue::fromString($createdAt),
-            $updatedAt ? DateValue::fromString($updatedAt) : null
+        return new Activity(
+            id: $activityId,
+            title: $activityTitle,
+            content: $activityContent,
+            createdAt: DateValue::fromString($createdAt),
+            updatedAt: $updatedAt ? DateValue::fromString($updatedAt) : null
         );
     }
 
     public static function createNew(string $title, string $content): self
     {
-        $activityId = ActivityId::generate();
-        $activityTitle = ActivityTitle::fromString($title);
+        $activityId = Identifier::create();
+        $activityTitle = Title::fromString($title);
         $activityContent = ActivityContent::fromString($content);
         $instance = new Activity($activityId, $activityTitle, $activityContent, DateValue::make(), null);
         $instance->recordEvent(
@@ -71,40 +70,21 @@ final class Activity extends BaseAggregate
         return $instance;
     }
 
-    public function id(): ActivityId
-    {
-        return $this->id;
-    }
-
-    public function title(): ActivityTitle
-    {
-        return $this->title;
-    }
-
+    /**
+     * @throws Exception
+     */
     public function changeTitle(string $title): void
     {
-        $this->title = ActivityTitle::fromString($title);
+        $this->title = Title::fromString($title);
         $this->updatedAt = DateValue::make();
     }
 
-    public function content(): ActivityContent
-    {
-        return $this->content;
-    }
-
+    /**
+     * @throws Exception
+     */
     public function changeContent(string $content): void
     {
         $this->content = ActivityContent::fromString($content);
         $this->updatedAt = DateValue::make();
-    }
-
-    public function createdAt(): DateValue
-    {
-        return $this->createdAt;
-    }
-
-    public function updatedAt(): ?DateValue
-    {
-        return $this->updatedAt;
     }
 }

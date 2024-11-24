@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Project\Modules\Notifications\Domain\ValueObjects;
+namespace Project\Base\Domain\ValueObjects;
 
 use Exception;
 
-final readonly class NotificationTitle
+readonly class Description
 {
     private function __construct(private string $value)
     {
@@ -23,7 +23,7 @@ final readonly class NotificationTitle
         throw new Exception('Invalid notification title.');
     }
 
-    public function equals(NotificationTitle $activityTitle): bool
+    public function equals(Description $activityTitle): bool
     {
         if (strlen($this->getValue()) === strlen($activityTitle->getValue())
             && $this->getValue() === $activityTitle->getValue()

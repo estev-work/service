@@ -4,23 +4,23 @@ namespace Project\Modules\Notifications\Domain;
 
 use Exception;
 use Project\Base\Domain\BaseAggregate;
+use Project\Base\Domain\ValueObjects\DateValue;
+use Project\Base\Domain\ValueObjects\Identifier;
+use Project\Base\Domain\ValueObjects\Title;
 use Project\Modules\Notifications\Domain\Events\NotificationCreatedEvent;
-use Project\Modules\Notifications\Domain\ValueObjects\DateValue;
 use Project\Modules\Notifications\Domain\ValueObjects\NotificationBody;
-use Project\Modules\Notifications\Domain\ValueObjects\NotificationId;
-use Project\Modules\Notifications\Domain\ValueObjects\NotificationTitle;
 
 class Notification extends BaseAggregate
 {
-    private readonly NotificationId $id;
-    private NotificationTitle $title;
-    private NotificationBody $body;
-    private readonly DateValue $createdAt;
-    private ?DateValue $updatedAt;
+    private(set) readonly Identifier $id;
+    private(set) Title $title;
+    private(set) NotificationBody $body;
+    private(set) readonly DateValue $createdAt;
+    private(set) ?DateValue $updatedAt;
 
     private function __construct(
-        NotificationId $id,
-        NotificationTitle $title,
+        Identifier $id,
+        Title $title,
         NotificationBody $body,
         DateValue $createdAt,
         ?DateValue $updatedAt
@@ -40,10 +40,10 @@ class Notification extends BaseAggregate
         string $title,
         string $body,
         string $createdAt,
-        string $updatedAt = null
+        ?string $updatedAt = null
     ): self {
-        $activityId = NotificationId::fromString($id);
-        $activityTitle = NotificationTitle::fromString($title);
+        $activityId = Identifier::fromString($id);
+        $activityTitle = Title::fromString($title);
         $activityBody = NotificationBody::fromString($body);
         return new self(
             $activityId,
@@ -59,8 +59,8 @@ class Notification extends BaseAggregate
      */
     public static function createNew(string $title, string $body): self
     {
-        $activityId = NotificationId::generate();
-        $activityTitle = NotificationTitle::fromString($title);
+        $activityId = Identifier::create();
+        $activityTitle = Title::fromString($title);
         $activityBody = NotificationBody::fromString($body);
         $instance = new Notification($activityId, $activityTitle, $activityBody, DateValue::make(), null);
         $instance->recordEvent(
@@ -71,31 +71,16 @@ class Notification extends BaseAggregate
         return $instance;
     }
 
-    public function id(): NotificationId
-    {
-        return $this->id;
-    }
-
-    public function title(): NotificationTitle
-    {
-        return $this->title;
-    }
-
     /**
      * @throws Exception
      */
     public function changeTitle(string $title): void
     {
-        $title = NotificationTitle::fromString($title);
+        $title = Title::fromString($title);
         if (!$this->title->equals($title)) {
             $this->title = $title;
             $this->updatedAt = DateValue::make();
         }
-    }
-
-    public function body(): NotificationBody
-    {
-        return $this->body;
     }
 
     /**
@@ -105,15 +90,5 @@ class Notification extends BaseAggregate
     {
         $this->body = NotificationBody::fromString($content);
         $this->updatedAt = DateValue::make();
-    }
-
-    public function createdAt(): DateValue
-    {
-        return $this->createdAt;
-    }
-
-    public function updatedAt(): ?DateValue
-    {
-        return $this->updatedAt;
     }
 }

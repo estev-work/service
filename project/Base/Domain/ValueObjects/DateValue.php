@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Project\Modules\Activities\Domain\ValueObjects;
+namespace Project\Base\Domain\ValueObjects;
 
-final readonly class DateValue
+use Project\Base\Domain\Exceptions\DomainLayerException;
+
+readonly class DateValue
 {
 
     private function __construct(private \DateTimeInterface $value)
@@ -23,7 +25,7 @@ final readonly class DateValue
             $date = new \DateTimeImmutable($value);
             return new self($date);
         } catch (\Throwable $e) {
-            throw new \InvalidArgumentException('Invalid activity date format.');
+            throw new DomainLayerException('Invalid activity date format.');
         }
     }
 

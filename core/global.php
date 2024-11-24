@@ -1,11 +1,12 @@
 <?php
+
 /**
  * Глобальная функция для получения экземпляра класса через контейнер
  *
  * @param string $class Класс или интерфейс, для которого нужно получить экземпляр
  *
  * @return object
- * @throws Exception
+ * @throws RuntimeException
  */
 function resolve(string $class): mixed
 {
